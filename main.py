@@ -1,9 +1,11 @@
 import socket
+import threading
 
 from IPy import IP
 
-# target = "192.168.1.0/24"
-target1 = "192.0.0.2"
+# 127.0.0.1
+
+target1 = "127.0.0.1"
 
 
 def check_ip(target):
@@ -15,9 +17,6 @@ def check_ip(target):
         return socket.gethostbyname(target)
 
 
-print(check_ip(target1))
-
-
 def scan_port(ip_adress, port):
     try:
         sock = socket.socket()
@@ -27,3 +26,25 @@ def scan_port(ip_adress, port):
         sock.close()
     except:
         pass
+
+
+def scan(target):
+    converted_ip = check_ip(target)
+    print("\n + [# Scanning Target] " + str(target))
+
+    threads = [
+        threading.Thread(target=scan_port, args=(converted_ip, i))
+        for i in range(1, 65536)
+    ]
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    return threads
+
+
+if __name__ == "__main__":
+    scan(target1)
