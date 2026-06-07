@@ -16,3 +16,14 @@ def check_ip(target):
 
 
 print(check_ip(target1))
+
+
+def scan_port(ip_adress, port):
+    try:
+        sock = socket.socket()
+        sock.settimeout(0.5)
+        sock.connect((ip_adress, port))
+        print(f"[+] Port {port} is open")
+        sock.close()
+    except:
+        pass
